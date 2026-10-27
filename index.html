@@ -157,9 +157,9 @@ main .wrap{padding-block:18px 48px}
 .pframe::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(transparent,rgba(0,0,0,.75))}
 .pick .rk{position:absolute;left:8px;bottom:2px;z-index:1;font-family:var(--display);font-weight:900;font-size:44px;line-height:1;color:var(--accent);text-shadow:0 2px 10px rgba(0,0,0,.6)}
 .pick:hover .pframe{outline:2px solid var(--accent);outline-offset:2px}
-.dots{display:flex;justify-content:center;gap:6px;margin-top:12px}
-.dots i{width:6px;height:6px;border-radius:3px;background:var(--line);transition:width .2s,background .2s}
-.dots i.on{width:18px;background:var(--accent)}
+.picks .dots{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.picks .dots i{width:6px;height:6px;border-radius:3px;background:var(--line);transition:width .2s,background .2s}
+.picks .dots i.on{width:18px;background:var(--accent)}
 .pick .pt{font-size:12.5px;font-weight:700;line-height:1.2}
 @media (prefers-reduced-motion:reduce){.pick img{transition:none}}
 
@@ -213,6 +213,53 @@ footer p{margin:0;max-width:70ch}
 .ghost{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:11px;font-weight:700;font-size:14px}
 .ghost.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+
+/* tools: pick for me, watched progress, toggles */
+.tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.dice{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:12px 10px;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 8px 20px -10px rgba(240,166,74,.6)}
+.dice span{font-size:20px;line-height:1}
+.prog{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 12px;display:grid;gap:6px;align-content:center;min-width:0}
+.prog b{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog b em{font-style:normal;color:var(--accent)}
+.prog .bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.prog .bar i{display:block;height:100%;background:var(--accent);border-radius:3px;transition:width .3s}
+.toggles{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tog{background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tog b{font-family:var(--mono);font-weight:500;font-size:11px;margin-left:5px;opacity:.75}
+.tog[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+/* watched + new-season marks on tiles */
+.thw{position:relative;width:38px;height:54px}
+.tile.seen .th,.tile.seen .sw{opacity:.45;filter:grayscale(.6)}
+.ck{position:absolute;right:-5px;bottom:-5px;width:20px;height:20px;border-radius:50%;background:#3dd68c;color:#06210f;font-size:12px;font-weight:900;display:grid;place-items:center;box-shadow:0 0 0 2px var(--surface);font-style:normal}
+.nsb{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;border-radius:4px;padding:1px 5px;background:var(--accent);color:var(--accent-ink)}
+.nsb.soon{background:none;color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+/* card actions */
+.acts{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:8px;margin-top:18px}
+.act{display:flex;align-items:center;justify-content:center;gap:7px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 6px;font-weight:700;font-size:13.5px;cursor:pointer;white-space:nowrap;min-width:0}
+.act .ic{font-size:16px;line-height:1}
+.act[aria-pressed="true"]{border-color:#3dd68c;background:color-mix(in srgb,#3dd68c 14%,var(--bg));color:#c9f5dc}
+.act.liked{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--bg))}
+.act .n{font-family:var(--mono);font-weight:500;font-size:12px;color:var(--muted)}
+.fresh{margin-top:16px;display:flex;align-items:center;gap:10px;border-radius:10px;padding:10px 12px;background:color-mix(in srgb,var(--accent) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);font-weight:700;font-size:14px}
+.fresh span{font-size:18px}
+/* pick-for-me sheet */
+.pk h2{margin:4px 0 4px;font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:40px;line-height:.95}
+.pk .hint{margin:0 0 14px}
+.moods{gap:8px}
+.mood{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:8px 13px;font-weight:700;font-size:13.5px;cursor:pointer}
+.mood[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.skipw{display:flex;align-items:center;gap:8px;margin:14px 0 0;font-size:14px;color:var(--muted)}
+.skipw input{width:18px;height:18px;accent-color:var(--accent)}
+.spin{width:100%;margin-top:16px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:14px;font-weight:800;font-size:16px;cursor:pointer}
+.pres{margin-top:18px}
+.pres:empty{display:none}
+.pcard{display:grid;grid-template-columns:92px minmax(0,1fr);gap:14px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px}
+.pcard img,.pcard .sw{width:92px;height:138px;border-radius:8px;object-fit:cover;font-size:40px}
+.pcard h3{margin:0 0 4px;font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:28px;line-height:.95;color:var(--fg);letter-spacing:.01em}
+.pcard p{margin:6px 0 0;font-size:13.5px;color:var(--muted);line-height:1.45}
+.pcard .go{margin-top:10px;display:inline-flex;background:var(--accent);color:var(--accent-ink);border:0;border-radius:9px;padding:9px 14px;font-weight:800;font-size:14px;cursor:pointer}
+.pcard.rolling{opacity:.7}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--fg);color:var(--bg);border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;box-shadow:0 10px 30px -8px rgba(0,0,0,.7);max-width:calc(100vw - 32px);text-align:center}
 </style>
 
 </head>
@@ -241,7 +288,7 @@ footer p{margin:0;max-width:70ch}
 <main><div class="wrap"><div class="pre" id="pre"></div><div id="view"></div></div></main>
 
 <footer><div class="wrap">
-  <p>Where-to-watch is for the US, checked October 2026. Streaming deals shuffle constantly, so if a link comes up empty, hit “All options” on the show's card for live availability. The colored dots on each show are its services, and the little bars under them are Connor's Messed Up-O-Meter. TV ratings are the official US ratings from each show's original network; some streaming apps list a stricter one. Watch times are estimates (episodes × average runtime) and count only seasons out so far.</p>
+  <p>Where-to-watch is for the US, checked October 2026. Streaming deals shuffle constantly, so if a link comes up empty, hit “All options” on the show's card for live availability. The colored dots on each show are its services, and the little bars under them are Connor's Messed Up-O-Meter. TV ratings are the official US ratings from each show's original network; some streaming apps list a stricter one. Watch times are estimates (episodes × average runtime) and count only seasons out so far. “Watched it” is saved on your own phone or computer only. Thumbs-up counts are anonymous and shared by everyone.</p>
 </div></footer>
 
 <div class="scrim" id="scrim" hidden></div>
@@ -285,7 +332,7 @@ const SHOWS = [
 
 {t:"Homeland",r:"TV-MA",h:80,y:"2011–2020",s:"8 seasons",g:["Spy","Thriller"],d:3,c:["Claire Danes","Mandy Patinkin","Damian Lewis","Rupert Friend","Morena Baccarin","F. Murray Abraham"],v:["netflix","paramount"],w:{"netflix": "https://www.netflix.com/title/70180387"},yt:"k1eED1X4fXc",n:"One of the OGs of FANTASTIC television. A CIA officer becomes convinced a rescued American POW has been turned. What a freaking show! It will keep you on your toes for weeks and weeks. You will rush home to watch it. You will love it, you will hate it, you will be scared shitless of it, and you will not be able to stop. Claire Danes is the GOAT!"},
 {t:"Longmire",r:"TV-14",h:47,y:"2012–2017",s:"6 seasons",g:["Western","Crime"],d:2,c:["Robert Taylor","Katee Sackhoff","Lou Diamond Phillips","A Martinez","Bailey Chase"],v:["netflix"],w:{"netflix": "https://www.netflix.com/title/70269479"},yt:"wJRvv2sb83o",n:"Absaroka County Sheriff out in Wyoming dealing with bad guys and other sheriffy duties. Overall a really good show. Some episodes are kinda corny, but you fall in love with the characters. Ol' Walt reminds me of my late father-in-law. Just a really great guy doing the right thing in his own way. Great book series by Craig Johnson as well."},
-{t:"The Gentlemen",r:"TV-MA",h:7,y:"2024–",s:"Ongoing",g:["Crime","Comedy"],d:3,c:["Theo James","Kaya Scodelario","Giancarlo Esposito","Vinnie Jones","Daniel Ings"],v:["netflix"],w:{"netflix": "https://www.netflix.com/title/81437051"},yt:"--0GsgeqthI",n:"Guy Ritchie made a movie with Matthew McConaughey, Colin Farrell and Charlie Hunnam a few years ago. You should watch that movie. This show is a new story set in the same world: an aristocrat inherits the family estate and finds out it's sitting on a weed empire. Not as good as the movie, but worth watching. It has that Guy Ritchie direction, which I always love."},
+{t:"The Gentlemen",ns:{n:2,d:"2026-09-03"},r:"TV-MA",h:7,y:"2024–",s:"Ongoing",g:["Crime","Comedy"],d:3,c:["Theo James","Kaya Scodelario","Giancarlo Esposito","Vinnie Jones","Daniel Ings"],v:["netflix"],w:{"netflix": "https://www.netflix.com/title/81437051"},yt:"--0GsgeqthI",n:"Guy Ritchie made a movie with Matthew McConaughey, Colin Farrell and Charlie Hunnam a few years ago. You should watch that movie. This show is a new story set in the same world: an aristocrat inherits the family estate and finds out it's sitting on a weed empire. Not as good as the movie, but worth watching. It has that Guy Ritchie direction, which I always love."},
 {t:"One Piece",r:"TV-14",h:16,y:"2023–",s:"Ongoing",g:["Adventure","Comedy"],d:1,c:["Iñaki Godoy","Emily Rudd","Mackenyu","Jacob Romero","Taz Skylar"],v:["netflix"],w:{"netflix": "https://www.netflix.com/title/80217863"},yt:"lNMSqxQtO0w",n:"Pirates and treasure and a lot of fun, based on the massively popular manga. A rubber-bodied kid builds a crew to find the greatest treasure in the world. Silly show, but still worth it."},
 {t:"Ozark",r:"TV-MA",h:44,y:"2017–2022",s:"4 seasons",g:["Crime","Drama"],d:4,c:["Jason Bateman","Laura Linney","Julia Garner","Tom Pelphrey","Sofia Hublitz"],v:["netflix"],w:{"netflix": "https://www.netflix.com/title/80117552"},yt:"5hAXVqrljbs",n:"A financial advisor drags his family to the Missouri Ozarks to launder money for a Mexican cartel. Jason Bateman as a bad guy?!? I mean, you gotta watch that, right? Brett actually watched it! It's a bit out of her wheelhouse, but she watched it and liked it. And Julia Garner steals every scene."},
 {t:"Black Summer",r:"TV-MA",h:9,y:"2019–2021",s:"2 seasons",g:["Horror","Zombie"],d:5,c:["Jaime King","Justin Chu Cary","Christine Lee","Sal Velez Jr."],v:["netflix"],w:{"netflix": "https://www.netflix.com/title/80198988"},yt:"tQA1omPJN24",n:"The first brutal weeks of a zombie apocalypse, told through strangers just trying to survive. Fast zombies, very little talking. VERY scary and intense. Intense is the word, yeah…"},
@@ -317,7 +364,7 @@ const SHOWS = [
 {t:"Ray Donovan",r:"TV-MA",h:77,y:"2013–2020",s:"7 seasons + movie",g:["Crime","Drama"],d:4,c:["Liev Schreiber","Jon Voight","Paula Malcomson","Eddie Marsan","Pooch Hall"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/ray-donovan/"},yt:"99NUVcnsZEE",n:"A fixer for the rich and famous in LA and all the various messes he cleans up, while his ex-con father (Jon Voight) causes even more. Fun, smart show!"},
 {t:"Dexter",r:"TV-MA",h:83,y:"2006–2013",s:"8 seasons",g:["Crime","Thriller"],d:4,c:["Michael C. Hall","Jennifer Carpenter","David Zayas","John Lithgow","James Remar"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/dexter/"},yt:"YQeUmSD1c3g",n:"Fucking Dexter! A Miami police blood-spatter analyst who's secretly a serial killer… who only kills other killers. Season 4 with John Lithgow is an all-timer. There are spin-offs too, if you can't stop."},
 
-{t:"The Terminal List",r:"TV-MA",h:8,y:"2022–",s:"Ongoing",g:["Action","Thriller"],d:4,c:["Chris Pratt","Taylor Kitsch","Constance Wu","Riley Keough","Jeanne Tripplehorn"],v:["prime"],w:{"prime": "https://www.primevideo.com/detail/0NGB908JKDOZ29WLQ2GS45USOV"},yt:"x9FvvsC0B5Q",n:"Based on a series of fantastic books by Jack Carr, a former Navy SEAL. A SEAL commander comes home after his whole platoon is wiped out in an ambush, figures out it was a setup, and goes after everyone responsible. People keep fucking with him and they really shouldn't. VERY good show, even better books!"},
+{t:"The Terminal List",ns:{n:2,d:"2026-10-21"},r:"TV-MA",h:8,y:"2022–",s:"Ongoing",g:["Action","Thriller"],d:4,c:["Chris Pratt","Taylor Kitsch","Constance Wu","Riley Keough","Jeanne Tripplehorn"],v:["prime"],w:{"prime": "https://www.primevideo.com/detail/0NGB908JKDOZ29WLQ2GS45USOV"},yt:"x9FvvsC0B5Q",n:"Based on a series of fantastic books by Jack Carr, a former Navy SEAL. A SEAL commander comes home after his whole platoon is wiped out in an ambush, figures out it was a setup, and goes after everyone responsible. People keep fucking with him and they really shouldn't. VERY good show, even better books!"},
 {t:"The Terminal List: Dark Wolf",r:"TV-MA",h:6,y:"2025",s:"1 season",g:["Action","Spy"],d:4,c:["Taylor Kitsch","Chris Pratt","Tom Hopper","Rona-Lee Shimon","Robert Wisdom"],v:["prime"],w:{"prime": "https://www.primevideo.com/detail/0MYH9XYR9SCGXB57LR8ES71GFL"},yt:"l8tZ07FLDdU",n:"Spin-off of The Terminal List, a prequel following Ben Edwards (Taylor Kitsch) going from SEAL to the CIA's dirty work. CIA, intrigue, guns, realistic. Really fun!"},
 {t:"Jack Ryan",r:"TV-MA",h:29,y:"2018–2023",s:"4 seasons",g:["Spy","Action"],d:3,c:["John Krasinski","Wendell Pierce","Michael Kelly","Abbie Cornish","Michael Peña"],v:["prime"],w:{"prime": "https://www.primevideo.com/detail/0ONGKHWBI6Y2CABWUR56DP08PM"},yt:"1KsyZF590NM",n:"Based on Tom Clancy's Jack Ryan books. John Krasinski is a CIA analyst who keeps getting dragged out from behind his desk into the field. Really, really, REALLY good show!"},
 {t:"Pennyworth",r:"TV-MA",h:28,y:"2019–2022",s:"3 seasons",g:["Crime","Comic Book"],d:3,c:["Jack Bannon","Ben Aldridge","Paloma Faith","Emma Paetz"],v:["hbo"],w:{"hbo": "https://play.hbomax.com/show/fefc61be-93fa-4805-b680-a0f2eefe4b9a"},yt:"QHbfV3gB7hg",n:"The origin story of Alfred Pennyworth, Batman's butler, before he was a butler: an ex-SAS soldier starting a security company in an alternate 1960s London. Way more action than you'd expect from a butler show."},
@@ -335,10 +382,10 @@ const SHOWS = [
 {t:"1883",r:"TV-MA",h:8,y:"2021–2022",s:"Limited series",g:["Western","Drama"],d:4,c:["Sam Elliott","Tim McGraw","Faith Hill","Isabel May","LaMonica Garrett"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/1883/"},yt:"ZkbH1zjsM7g",n:"Created by Taylor Sheridan. Yellowstone origin story: the Duttons on the Oregon Trail. Brilliant, beautiful, violent, historically accurate, a truly amazing show! Isabel May knocked me off my feet with this performance. She will be one to watch!"},
 {t:"1923",r:"TV-MA",h:14,y:"2022–2025",s:"2 seasons",g:["Western","Drama"],d:5,c:["Harrison Ford","Helen Mirren","Brandon Sklenar","Julia Schlaepfer","Darren Mann"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/1923/"},yt:"v88e9Dwnqo0",n:"Created by Taylor Sheridan. The Yellowstone origin story continues, with Harrison Ford and Helen Mirren holding the ranch together through drought and the Depression. Again: brilliant, brutal, accurate."},
 {t:"Mayor of Kingstown",r:"TV-MA",h:33,y:"2021–",s:"Ongoing",g:["Crime","Drama"],d:4,c:["Jeremy Renner","Dianne Wiest","Hugh Dillon","Taylor Handley","Tobi Bamtefa"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/mayor-of-kingstown/"},yt:"zhmIVF2dTbI",n:"Created by Taylor Sheridan and Hugh Dillon. Jeremy Renner is the fixer in a Michigan prison town, basically running crime behind the scenes. Straddling both sides of the law, he has his fingers in everything, and it is constantly coming apart on him. Smart, fun show."},
-{t:"Tulsa King",r:"TV-MA",h:22,y:"2022–",s:"Ongoing",g:["Crime","Comedy"],d:3,c:["Sylvester Stallone","Andrea Savage","Martin Starr","Jay Will","Garrett Hedlund","Domenick Lombardozzi"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/tulsa-king/"},yt:"aaQSScwZPbA",n:"Created by Taylor Sheridan. Sylvester Stallone is a high-up-the-chain mob guy who spent 25 years in the can and kept his mouth shut the whole time. He gets out and the boss sends him to Tulsa, Oklahoma, for his trouble. He doesn't like that, but he finally puts Tulsa on the map, crime-wise. Actually pretty good. I was surprised at how much fun it was to watch."},
+{t:"Tulsa King",ns:{n:4,d:"2026-10-16"},r:"TV-MA",h:22,y:"2022–",s:"Ongoing",g:["Crime","Comedy"],d:3,c:["Sylvester Stallone","Andrea Savage","Martin Starr","Jay Will","Garrett Hedlund","Domenick Lombardozzi"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/tulsa-king/"},yt:"aaQSScwZPbA",n:"Created by Taylor Sheridan. Sylvester Stallone is a high-up-the-chain mob guy who spent 25 years in the can and kept his mouth shut the whole time. He gets out and the boss sends him to Tulsa, Oklahoma, for his trouble. He doesn't like that, but he finally puts Tulsa on the map, crime-wise. Actually pretty good. I was surprised at how much fun it was to watch."},
 {t:"Landman",r:"TV-MA",h:18,y:"2024–",s:"Ongoing",g:["Drama","Western"],d:3,c:["Billy Bob Thornton","Demi Moore","Ali Larter","Jon Hamm","Michelle Randolph","Jacob Lofland"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/landman/"},yt:"7zxh49-bsIk",n:"Created by Taylor Sheridan. Billy Bob Thornton's job is protecting the oil fields of West Texas for a big oil company. Sounds like it shouldn't be too hard to do… turns out it is. It's a really good show, and Billy Bob's rants alone are worth it."},
-{t:"MobLand",r:"TV-MA",h:9,y:"2025–",s:"Ongoing",g:["Crime","Thriller"],d:4,c:["Tom Hardy","Pierce Brosnan","Helen Mirren","Paddy Considine","Joanne Froggatt"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/mobland/"},yt:"qKGgw7Ob5f4",n:"Tom Hardy is the fixer for a London crime family. Guy Ritchie directed the first episodes and it is slick. Pierce Brosnan and Helen Mirren as the mob boss and his wife are deliciously evil. Smart, funny and oh so beautifully violent."},
-{t:"Special Ops: Lioness",r:"TV-MA",h:13,y:"2023–",s:"Ongoing",g:["Action","Spy"],d:4,c:["Zoe Saldaña","Laysla De Oliveira","Nicole Kidman","Morgan Freeman","Michael Kelly"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/lioness/"},yt:"Y11p6YzdKHw",n:"Oh man. Another Taylor Sheridan show. This is an incredible show about a CIA program of all women who go undercover to infiltrate terrorist networks and drug cartels. Their mission is to get close to the wives, daughters or inner circles of high-value targets."},
+{t:"MobLand",ns:{n:2,d:"2026-09-18"},r:"TV-MA",h:9,y:"2025–",s:"Ongoing",g:["Crime","Thriller"],d:4,c:["Tom Hardy","Pierce Brosnan","Helen Mirren","Paddy Considine","Joanne Froggatt"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/mobland/"},yt:"qKGgw7Ob5f4",n:"Tom Hardy is the fixer for a London crime family. Guy Ritchie directed the first episodes and it is slick. Pierce Brosnan and Helen Mirren as the mob boss and his wife are deliciously evil. Smart, funny and oh so beautifully violent."},
+{t:"Special Ops: Lioness",ns:{n:3,d:"2026-08-02"},r:"TV-MA",h:13,y:"2023–",s:"Ongoing",g:["Action","Spy"],d:4,c:["Zoe Saldaña","Laysla De Oliveira","Nicole Kidman","Morgan Freeman","Michael Kelly"],v:["paramount"],w:{"paramount": "https://www.paramountplus.com/shows/lioness/"},yt:"Y11p6YzdKHw",n:"Oh man. Another Taylor Sheridan show. This is an incredible show about a CIA program of all women who go undercover to infiltrate terrorist networks and drug cartels. Their mission is to get close to the wives, daughters or inner circles of high-value targets."},
 
 {t:"Sugar",r:"TV-MA",h:6,y:"2024–",s:"Ongoing",g:["Crime","Noir"],d:2,c:["Colin Farrell","Amy Ryan","Kirby Howell-Baptiste","James Cromwell"],v:["apple"],w:{"apple": "https://tv.apple.com/us/show/sugar/umc.cmc.4r6q7tdquewehwvb3rzl0k3dt"},yt:"twvPGxuEOEA",n:"Colin Farrell is a movie-obsessed private investigator in Los Angeles hunting for a missing granddaughter of a Hollywood legend. Really slick show… well done. And there's a twist I'm not going to spoil."},
 {t:"Masters of the Air",r:"TV-MA",h:9,y:"2024",s:"Limited series",g:["War","History"],d:4,c:["Austin Butler","Callum Turner","Barry Keoghan","Anthony Boyle","Nate Mann"],v:["apple"],w:{"apple": "https://tv.apple.com/us/show/masters-of-the-air/umc.cmc.7bxcni0vwgll9kmicq738k5q2"},yt:"lA-1JCRguZ0",n:"The 100th Bomb Group, flying B-17s over Germany in World War II. Same guys that did Band of Brothers and The Pacific, which are now on this list too. Ultra-realistic war stories retelling true stories from WWII."},
@@ -346,7 +393,7 @@ const SHOWS = [
 {t:"The Pacific",r:"TV-MA",h:9,yt:"smoNSbMs9Yo",y:"2010",s:"Limited series",g:["War","History"],d:5,c:["James Badge Dale","Joseph Mazzello","Jon Seda","Rami Malek","Jon Bernthal"],v:["hbo"],w:{"hbo": "https://play.hbomax.com/show/b930854b-fb6b-43fe-b38b-251b2d290fd0"},n:"Band of Brothers' darker, meaner sibling. Three real Marines fighting through Guadalcanal, Peleliu and Okinawa. Brutal, exhausting and absolutely worth it. Rami Malek is terrifying in it."},
 {t:"The Morning Show",r:"TV-MA",h:40,y:"2019–",s:"Ongoing",g:["Drama"],d:2,c:["Jennifer Aniston","Reese Witherspoon","Steve Carell","Billy Crudup","Greta Lee"],v:["apple"],w:{"apple": "https://tv.apple.com/us/show/the-morning-show/umc.cmc.25tn3v8ku4b39tr6ccgb8nl6m"},yt:"vPrtuy_4lHM",n:"A network morning show blows up when its star anchor gets fired in a #MeToo scandal. The first season is really good… they should have stopped there. Worth watching the first season, though. Billy Crudup is a riot."},
 {t:"Monarch: Legacy of Monsters",r:"TV-14",h:8,y:"2023–",s:"Ongoing",g:["Sci-Fi","Adventure"],d:2,c:["Kurt Russell","Wyatt Russell","Anna Sawai","Mari Yamamoto","Ren Watabe"],v:["apple"],w:{"apple": "https://tv.apple.com/us/show/monarch-legacy-of-monsters/umc.cmc.62l8x0ixrhyq3yaqa5y8yo7ew"},yt:"JLHsM4bpfxY",n:"All about Godzilla and that whole world. Set after Godzilla trashes San Francisco, it jumps back to the 1950s to show how the secret monster-hunting agency got started. Kurt Russell and his son play the same guy, old and young. I had a good time watching it."},
-{t:"Ted Lasso",r:"TV-MA",h:23,y:"2020–",s:"Ongoing",g:["Comedy","Sports"],d:1,c:["Jason Sudeikis","Hannah Waddingham","Brett Goldstein","Juno Temple","Brendan Hunt","Phil Dunster"],v:["apple"],w:{"apple": "https://tv.apple.com/us/show/ted-lasso/umc.cmc.vtoh0mn0xn7t3c643xqonfzy"},yt:"3u7EIiohs6U",n:"An American college football coach gets hired to coach an English soccer team, knowing nothing about soccer. I, along with everyone else, fell in love with Ted Lasso. Give it 3 episodes and you'll be so glad you did. The sun will be shining a bit brighter, your food will taste a bit better and your stride will be striding a bit stride-ier? I don't know. It's such a feel-good show, and you won't be able to get enough of it. I almost turned it off during the first episode because it seemed a little silly, and it is, don't get me wrong. But once you're invested in these characters, you'll be sending me a thank-you letter, and I'll accept it with a warmer heart for having watched it myself. Lol. Alright, maybe I laid that on a little thick, but it's really not too far off. You'll see ;)"},
+{t:"Ted Lasso",ns:{n:4,d:"2026-08-05"},r:"TV-MA",h:23,y:"2020–",s:"Ongoing",g:["Comedy","Sports"],d:1,c:["Jason Sudeikis","Hannah Waddingham","Brett Goldstein","Juno Temple","Brendan Hunt","Phil Dunster"],v:["apple"],w:{"apple": "https://tv.apple.com/us/show/ted-lasso/umc.cmc.vtoh0mn0xn7t3c643xqonfzy"},yt:"3u7EIiohs6U",n:"An American college football coach gets hired to coach an English soccer team, knowing nothing about soccer. I, along with everyone else, fell in love with Ted Lasso. Give it 3 episodes and you'll be so glad you did. The sun will be shining a bit brighter, your food will taste a bit better and your stride will be striding a bit stride-ier? I don't know. It's such a feel-good show, and you won't be able to get enough of it. I almost turned it off during the first episode because it seemed a little silly, and it is, don't get me wrong. But once you're invested in these characters, you'll be sending me a thank-you letter, and I'll accept it with a warmer heart for having watched it myself. Lol. Alright, maybe I laid that on a little thick, but it's really not too far off. You'll see ;)"},
 {t:"Shrinking",r:"TV-MA",h:19,y:"2023–",s:"Ongoing",g:["Comedy","Drama"],d:1,c:["Jason Segel","Harrison Ford","Jessica Williams","Christa Miller","Luke Tennie","Michael Urie"],v:["apple"],w:{"apple": "https://tv.apple.com/us/show/shrinking/umc.cmc.apzybj6eqf6pzccd97kev7bs"},yt:"YjHfjQDWl1A",n:"A grieving therapist (Jason Segel) starts breaking all the rules by telling his patients exactly what he thinks, which turns his life, and theirs, upside down. It's basically therapy meets chaos, with Harrison Ford as his hilariously grumpy mentor."},
 
 {t:"Alien: Earth",r:"TV-MA",h:8,y:"2025–",s:"Ongoing",g:["Sci-Fi","Horror"],d:5,c:["Sydney Chandler","Timothy Olyphant","Alex Lawther","Samuel Blenkin","Babou Ceesay","Essie Davis"],v:["hulu"],w:{"hulu": "https://www.hulu.com/series/alien-earth-ac314a24-c615-48ee-8e24-b26de75e64ef"},yt:"ZbsiKjVAV28",n:"The latest chapter in the Alien series, made by Noah Hawley (the Fargo guy), and the first time the xenomorphs make it to Earth. Ridley Scott directed the original 1979 movie. Anything Alien or Predator that gets made, I will watch. I looooove all of them. Alien: Earth stays true to the original's jump scares and extraterrestrial violence, and I simply love it. It's great! It's fun! It's twisted! It's worth it!"},
@@ -364,13 +411,13 @@ const SHOWS = [
 {t:"The Son",r:"TV-14",h:15,y:"2017–2019",s:"2 seasons",g:["Western","Drama"],d:3,c:["Pierce Brosnan","Henry Garrett","Jacob Lofland","Zahn McClarnon","Paola Núñez"],v:["amc"],w:{"amc": "https://www.amcplus.com/shows/the-son--1002253"},yt:"4Ft9vsjqy0Y",n:"Pierce Brosnan builds a Texas oil dynasty in a pretty interesting way, cutting between his kidnapping by Comanches as a boy in the 1800s and his ruthless rule in 1915. Based on Philipp Meyer's novel."},
 {t:"Bosch",r:"TV-MA",h:57,y:"2014–2021",s:"7 seasons",g:["Crime","Procedural"],d:3,c:["Titus Welliver","Jamie Hector","Amy Aquino","Madison Lintz","Lance Reddick"],v:["prime"],w:{"prime": "https://www.primevideo.com/detail/0TISZ3Q0BNUTSZS11S7VKS6O18"},yt:"vuVAP_4TQEY",n:"Good call, Tom! Based on Michael Connelly's novels about LAPD detective Harry Bosch, a Vietnam veteran who lives by the motto “Everybody counts or nobody counts.” It's not a flashy cop show full of gimmicks; it's a smart, grounded police procedural about real detective work and strong characters. Titus Welliver absolutely owns the role. If you like crime dramas, Bosch is about as good as they come. The spin-off, Bosch: Legacy, keeps it going."},
 {t:"The Boys",r:"TV-MA",h:40,yt:"M1bhOaLV4FU",y:"2019–2026",s:"5 seasons",g:["Superhero","Dark Comedy"],d:5,c:["Karl Urban","Jack Quaid","Antony Starr","Erin Moriarty","Laz Alonso","Chace Crawford","Jensen Ackles"],v:["prime"],w:{"prime": "https://www.primevideo.com/detail/0S1FYJ3LY9KTL9C7WFFAGA9F6F"},n:"What if superheroes were real, owned by a giant corporation, and total psychopaths? This show is the answer, and the answer is fucking horrifying. Karl Urban leads a crew of regular people trying to take them down, and Antony Starr (yes, the Banshee guy) as Homelander is the scariest villain on TV. Violent, disgusting, offensive and hilarious. If you liked Preacher, stop reading this and go watch it."},
-{t:"Slow Horses",r:"TV-MA",h:23,yt:"O9ZJChzPn0U",y:"2022–",s:"Ongoing",g:["Spy","Comedy"],d:3,c:["Gary Oldman","Jack Lowden","Kristin Scott Thomas","Saskia Reeves","Christopher Chung","Jonathan Pryce"],v:["apple"],w:{"apple": "https://tv.apple.com/us/show/slow-horses/umc.cmc.2szz3fdt71tl1ulnbp8utgq5o"},n:"MI5 dumps all its screwups in a crappy office called Slough House, run by Jackson Lamb, a farting, boozing, chain-smoking slob played by Gary Oldman, who is having the time of his life. And somehow these losers keep stumbling into the biggest cases in London. Smart spy thriller, really funny, and Lamb's insults alone are worth it. Based on Mick Herron's books."},
+{t:"Slow Horses",ns:{n:6,d:"2026-09-16"},r:"TV-MA",h:23,yt:"O9ZJChzPn0U",y:"2022–",s:"Ongoing",g:["Spy","Comedy"],d:3,c:["Gary Oldman","Jack Lowden","Kristin Scott Thomas","Saskia Reeves","Christopher Chung","Jonathan Pryce"],v:["apple"],w:{"apple": "https://tv.apple.com/us/show/slow-horses/umc.cmc.2szz3fdt71tl1ulnbp8utgq5o"},n:"MI5 dumps all its screwups in a crappy office called Slough House, run by Jackson Lamb, a farting, boozing, chain-smoking slob played by Gary Oldman, who is having the time of his life. And somehow these losers keep stumbling into the biggest cases in London. Smart spy thriller, really funny, and Lamb's insults alone are worth it. Based on Mick Herron's books."},
 {t:"Boardwalk Empire",r:"TV-MA",h:53,yt:"e6z71l6HQwQ",y:"2010–2014",s:"5 seasons",g:["Crime","Period"],d:4,c:["Steve Buscemi","Michael Shannon","Kelly Macdonald","Michael Pitt","Michael K. Williams","Stephen Graham","Shea Whigham"],v:["hbo"],w:{"hbo": "https://play.hbomax.com/show/369f71c8-bc34-4d3c-a594-3c413bb0ce4d"},n:"Atlantic City, 1920. Prohibition just started and Nucky Thompson (Steve Buscemi), the city treasurer, is running booze, the cops and pretty much the whole town. Al Capone, Lucky Luciano and Arnold Rothstein all show up. Made by a Sopranos writer, with Scorsese directing the pilot, and it shows. Gorgeous, smart and brutal. Michael K. Williams from The Wire is in it too, so you know it's good."},
-{t:"Reacher",r:"TV-MA",h:20,yt:"GSycMV-_Csw",y:"2022–",s:"Ongoing",g:["Action","Crime"],d:3,c:["Alan Ritchson","Maria Sten","Malcolm Goodwin","Willa Fitzgerald"],v:["prime"],w:{"prime": "https://www.primevideo.com/detail/0RTZ57DQ6PBHH29UN5JS7U7CW4"},n:"Jack Reacher is an ex-Army investigator the size of a refrigerator who drifts from town to town with no phone, no car and no luggage, and somehow trouble always finds him. Then he solves it by breaking faces. Alan Ritchson IS Reacher, the way Lee Child wrote him. Not complicated, not trying to be, and extremely satisfying. Great books too."},
+{t:"Reacher",ns:{n:4,d:"2026-08-12"},r:"TV-MA",h:20,yt:"GSycMV-_Csw",y:"2022–",s:"Ongoing",g:["Action","Crime"],d:3,c:["Alan Ritchson","Maria Sten","Malcolm Goodwin","Willa Fitzgerald"],v:["prime"],w:{"prime": "https://www.primevideo.com/detail/0RTZ57DQ6PBHH29UN5JS7U7CW4"},n:"Jack Reacher is an ex-Army investigator the size of a refrigerator who drifts from town to town with no phone, no car and no luggage, and somehow trouble always finds him. Then he solves it by breaking faces. Alan Ritchson IS Reacher, the way Lee Child wrote him. Not complicated, not trying to be, and extremely satisfying. Great books too."},
 {t:"Fallout",r:"TV-MA",h:16,yt:"7h8zJHywjAw",y:"2024–",s:"Ongoing",g:["Sci-Fi","Post-Apocalyptic"],d:3,c:["Ella Purnell","Walton Goggins","Aaron Moten","Kyle MacLachlan"],v:["prime"],w:{"prime": "https://www.primevideo.com/detail/0HAQAA7JM43QWX0H6GUD3IOF70"},n:"Another video game adaptation that's actually good, and I mean really good. 200 years after the bombs drop, a sweet, naive girl leaves her cozy underground vault for the first time and finds out the wasteland is a nightmare. Walton Goggins as the Ghoul, a noseless, irradiated cowboy bounty hunter, steals the whole damn show. Funny, gory and weird as hell. You don't need to have played the games."},
 {t:"Vinland Saga",r:"TV-MA",h:19,yt:"f8JrZ7Q_p-8",y:"2019–2023",s:"2 seasons",g:["Animated","History","Action"],d:4,c:["Aleks Le","Kirk Thornton","Patrick Seitz","Griffin Burns","Greg Chun"],v:["netflix","prime"],w:{"netflix": "https://www.netflix.com/title/81249833", "prime": "https://www.primevideo.com/detail/0TFYZAFV001J3JD9OROZAXS2UJ"},n:"My son Kellen recommended this one to me, and he was dead right. Don't let the cartoon fool you, this is one of the deepest shows on this whole list. A kid named Thorfinn watches his father get killed, then spends years fighting for the man who did it, just waiting for his shot at revenge. Season 1 is brutal, bloody Viking warfare and it is awesome. Then season 2 flips the whole thing on its head. It slows way down, he ends up a slave on a farm, and the show turns into a story about a man trying to figure out how to live with everything he's done. Love, death, regret, redemption, fear… it goes there, all of it, and it never takes the easy way out. I did not expect a Viking anime to make me think this hard. Watch the English version on Netflix. If you liked Vikings, check it out. If you think anime isn't your thing, check it out anyway… find out why anime is a thing."},
-{t:"The Rings of Power",r:"TV-14",h:17,yt:"x8UAUAuKNcU",y:"2022–",s:"Ongoing",g:["Fantasy","Action"],d:3,c:["Morfydd Clark","Charlie Vickers","Robert Aramayo","Owain Arthur","Charles Edwards","Markella Kavenagh","Daniel Weyman"],v:["prime"],w:{"prime": "https://www.primevideo.com/detail/0TUVXIO58IUNEPNBF8363Z7YGL"},n:"Middle-earth, thousands of years before Frodo ever left the Shire. This is the story of how the rings got made in the first place and how Sauron conned the whole world into it. Galadriel isn't the calm, glowing elf queen from the movies yet. She's a sword-swinging warrior hunting Sauron while everyone tells her he's dead and gone. Elves, dwarves, Númenor, balrogs, the forging of the rings… and it is absolutely gorgeous, maybe the most expensive-looking show ever made. Charlie Vickers is fantastic in it, and that's all I'm saying. If you love Lord of the Rings, this is a must. Season 3 drops November 11, so get caught up."},
-{t:"The Diplomat",r:"TV-MA",h:24,yt:"UhyAHB8Igos",y:"2023–",s:"Ongoing",g:["Political", "Drama"],d:2,c:["Keri Russell", "Rufus Sewell", "David Gyasi", "Ali Ahn", "Rory Kinnear", "Allison Janney", "Bradley Whitford"],v:["netflix"],w:{"netflix": "https://www.netflix.com/title/81288983"},n:"Great show for almost everybody. Smart and funny. Keri Russell is a career diplomat who wants a real crisis job and instead gets shoved into the US Ambassador to the UK gig right as an international mess blows up, while her husband (Rufus Sewell), a former ambassador himself, can't stop meddling. It's basically The West Wing with more swearing and better accents. And yes, Allison Janney and Bradley Whitford show up later, so West Wing fans, you're welcome."},
+{t:"The Rings of Power",ns:{n:3,d:"2026-11-11"},r:"TV-14",h:17,yt:"x8UAUAuKNcU",y:"2022–",s:"Ongoing",g:["Fantasy","Action"],d:3,c:["Morfydd Clark","Charlie Vickers","Robert Aramayo","Owain Arthur","Charles Edwards","Markella Kavenagh","Daniel Weyman"],v:["prime"],w:{"prime": "https://www.primevideo.com/detail/0TUVXIO58IUNEPNBF8363Z7YGL"},n:"Middle-earth, thousands of years before Frodo ever left the Shire. This is the story of how the rings got made in the first place and how Sauron conned the whole world into it. Galadriel isn't the calm, glowing elf queen from the movies yet. She's a sword-swinging warrior hunting Sauron while everyone tells her he's dead and gone. Elves, dwarves, Númenor, balrogs, the forging of the rings… and it is absolutely gorgeous, maybe the most expensive-looking show ever made. Charlie Vickers is fantastic in it, and that's all I'm saying. If you love Lord of the Rings, this is a must. Season 3 drops November 11, so get caught up."},
+{t:"The Diplomat",ns:{n:4,d:"2026-10-15"},r:"TV-MA",h:24,yt:"UhyAHB8Igos",y:"2023–",s:"Ongoing",g:["Political", "Drama"],d:2,c:["Keri Russell", "Rufus Sewell", "David Gyasi", "Ali Ahn", "Rory Kinnear", "Allison Janney", "Bradley Whitford"],v:["netflix"],w:{"netflix": "https://www.netflix.com/title/81288983"},n:"Great show for almost everybody. Smart and funny. Keri Russell is a career diplomat who wants a real crisis job and instead gets shoved into the US Ambassador to the UK gig right as an international mess blows up, while her husband (Rufus Sewell), a former ambassador himself, can't stop meddling. It's basically The West Wing with more swearing and better accents. And yes, Allison Janney and Bradley Whitford show up later, so West Wing fans, you're welcome."},
 {t:"Avatar: The Last Airbender",r:"TV-Y7",h:23,yt:"ooVvH2IYz0w",y:"2005–2008",s:"3 seasons",g:["Animated", "Fantasy", "Adventure"],d:1,c:["Zach Tyler Eisen", "Mae Whitman", "Jack DeSena", "Dante Basco", "Jessie Flower", "Mako", "Greg Baldwin"],v:["netflix", "paramount"],w:{"paramount": "https://www.paramountplus.com/shows/avatar-the-last-airbender/", "netflix": "https://www.netflix.com/title/70142405"},n:"The original cartoon, not the live-action one. A 12-year-old kid wakes up after 100 years frozen in an iceberg and finds out he's the Avatar, the only one who can master all four elements and end a war the Fire Nation has been winning the whole time he was gone. Avatar is made for kids, but come the second season it starts dealing with increasingly adult issues: war, loss, guilt, figuring out who you really are. It's much deeper than what it shows on its face. Zuko's story alone is one of the best character arcs in TV, cartoon or not."},
 {t:"Squid Game",r:"TV-MA",h:21,yt:"oqxAJKy0ii4",y:"2021–2025",s:"3 seasons",g:["Thriller", "Drama"],d:5,c:["Lee Jung-jae", "Park Hae-soo", "Wi Ha-joon", "Jung Ho-yeon", "Oh Young-soo", "Lee Byung-hun", "Yim Si-wan", "Gong Yoo"],v:["netflix"],w:{"netflix": "https://www.netflix.com/title/81040344"},n:"WTF?!? Hundreds of broke, desperate people get invited to play kids' games for a giant cash prize. Lose a game, you die. That's it, that's the show, and you will not be able to stop watching it. It's Korean, so pick subtitles or the English dub and buckle up."},
 {t:"American Primeval",r:"TV-MA",h:5.5,yt:"4BMX4Ahp7X4",y:"2025",s:"Limited series",g:["Western", "History"],d:5,c:["Taylor Kitsch", "Betty Gilpin", "Dane DeHaan", "Saura Lightfoot-Leon", "Shea Whigham", "Kim Coates", "Preston Mota"],v:["netflix"],w:{"netflix": "https://www.netflix.com/title/81457507"},n:"Gritty, realistic. Utah, 1857. A mother and her son try to make it across the frontier while the Mormon militia, the US Army, Native tribes and a whole lot of nasty mountain men go to war with each other all around them. Peter Berg directed it, and it's brutal from the first ten minutes. Taylor Kitsch (Dark Wolf) is great in it. Not for the squeamish."},
@@ -413,6 +460,91 @@ const ACTORS = (() => {
   return [...m.entries()].map(([name, shows]) => ({name, shows, n:norm(name)}));
 })();
 
+/* ---------- new seasons, watched, likes, share ---------- */
+const SITE = 'https://healyboxoffice.tv/';
+const slug = t => norm(t).replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60);
+SHOWS.forEach(s => { s.slug = slug(s.t); });
+const BYSLUG = Object.fromEntries(SHOWS.map(s=>[s.slug,s]));
+const DAY = 864e5, NOW = Date.now();
+const fmtDay = d => d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+function fresh(s){
+  if (!s.ns) return null;
+  const d = new Date(s.ns.d+'T12:00:00'), days = (NOW - d) / DAY;
+  if (days >= 0 && days <= 90) return {kind:'new', n:s.ns.n, d};
+  if (days < 0 && days >= -75) return {kind:'soon', n:s.ns.n, d};
+  return null;
+}
+const freshTag = s => { const f = fresh(s); if (!f) return '';
+  return f.kind==='new' ? `<span class="nsb" title="Season ${f.n} premiered ${fmtDay(f.d)}">New S${f.n}</span>` : `<span class="nsb soon" title="Season ${f.n} premieres ${fmtDay(f.d)}">S${f.n} · ${fmtDay(f.d)}</span>`; };
+const store = {
+  get(k){ try { return new Set(JSON.parse(localStorage.getItem(k)||'[]')); } catch(e){ return new Set(); } },
+  put(k,set){ try { localStorage.setItem(k, JSON.stringify([...set])); } catch(e){} }
+};
+let WATCHED = store.get('hbo-watched'), LIKED = store.get('hbo-liked');
+const seen = s => WATCHED.has(s.slug);
+const CNT = 'https://abacus.jasoncameron.dev', CNS = 'healyboxoffice';
+async function likeCount(s){
+  try { const r = await fetch(`${CNT}/get/${CNS}/${s.slug}`); if (r.status === 404) return 0; if (!r.ok) return null; const j = await r.json(); return typeof j.value === 'number' ? j.value : null; } catch(e){ return null; }
+}
+async function likeHit(s){
+  try { const r = await fetch(`${CNT}/hit/${CNS}/${s.slug}`); if (!r.ok) return null; const j = await r.json(); return typeof j.value === 'number' ? j.value : null; } catch(e){ return null; }
+}
+let toastT;
+function toast(msg){
+  let t = document.querySelector('.toast'); if (!t){ t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+  t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(()=>{ t.hidden = true; }, 2400);
+}
+async function share(s){
+  const url = SITE + '#' + s.slug, text = `${s.t} — Connor says watch it.`;
+  if (navigator.share) { try { await navigator.share({title:s.t, text, url}); return; } catch(e){ if (e && e.name === 'AbortError') return; } }
+  try { await navigator.clipboard.writeText(url); toast('Link copied — go send it'); } catch(e){ toast(url); }
+}
+const MOODS = [
+  {k:'any',   l:'Surprise me',     f:()=>true},
+  {k:'laugh', l:'Make me laugh',   f:s=>s.mg.includes('Comedy')||s.mg.includes('Animated')},
+  {k:'dark',  l:'Mess me up',      f:s=>s.d>=4},
+  {k:'chill', l:'Keep it chill',   f:s=>s.d<=2},
+  {k:'boom',  l:'Blow stuff up',   f:s=>s.mg.includes('Action')||s.mg.includes('War & History')},
+  {k:'quick', l:'Quick binge',     f:s=>(s.h||0)<=12},
+  {k:'new',   l:'New seasons',     f:s=>!!fresh(s)}];
+let mood = 'any', skipSeen = true, rolling = 0;
+function openPicker(){
+  lastFocus = document.activeElement;
+  const sheet = $('#sheet');
+  sheet.innerHTML = `
+    <div class="grab"><i></i><button class="close" id="close" data-close><span aria-hidden="true">←</span>Back to list</button></div>
+    <div class="pk"><h2>Pick for me</h2><p class="hint">Can't decide? Pick a mood and let fate (and Connor) choose.</p>
+      <div class="cloud moods" role="group" aria-label="Mood">${MOODS.map(m=>`<button class="mood" data-mood="${m.k}" aria-pressed="${mood===m.k}">${esc(m.l)}</button>`).join('')}</div>
+      <label class="skipw"><input type="checkbox" id="skipw" ${skipSeen?'checked':''}> Skip shows I've already watched</label>
+      <button class="spin" data-spin>🎲 Pick a show</button>
+      <div class="pres" id="pres" aria-live="polite"></div></div>`;
+  $('#scrim').hidden = false; sheet.hidden = false; sheet.scrollTop = 0; document.body.style.overflow = 'hidden';
+  $('#close').focus();
+}
+function pcard(s, final){
+  const h = hash(s.t)%360, l = 34-s.d*4;
+  const art = ART[s.t] ? `<img src="${ART[s.t]}" alt="">` : `<span class="sw" style="--h:${h};--l:${l}%">${esc(s.key.charAt(0).toUpperCase())}</span>`;
+  const first = (s.n.match(/^.*?[.!?](\s|$)/)||[s.n])[0];
+  return `<div class="pcard${final?'':' rolling'}">${art}<div style="min-width:0"><h3>${esc(s.t)}</h3><div class="facts"><span>${esc(s.y)}</span>${s.h?`<span>≈${s.h} hrs</span>`:''}<span>Messed up ${s.d}/5</span></div>${final?`<p>${esc(first)}</p><button class="go" data-open="${s.id}">Show me →</button>`:''}</div></div>`;
+}
+function spin(){
+  const m = MOODS.find(x=>x.k===mood) || MOODS[0];
+  let pool = SHOWS.filter(m.f);
+  if (skipSeen) pool = pool.filter(s=>!seen(s));
+  const box = $('#pres'); if (!box) return;
+  if (!pool.length){ box.innerHTML = `<div class="empty" style="padding:16px 0"><strong>You've seen 'em all</strong>Nothing left in that mood. Untick “skip watched” or pick another mood.</div>`; return; }
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  const run = ++rolling;
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let i = 0; const steps = reduce || pool.length < 3 ? 0 : 9;
+  const tick = () => {
+    if (run !== rolling || !$('#pres')) return;
+    if (i++ < steps){ $('#pres').innerHTML = pcard(pool[Math.floor(Math.random()*pool.length)], false); setTimeout(tick, 60 + i*12); }
+    else { $('#pres').innerHTML = pcard(pick, true); const b = $('#pres .go'); if (b) b.focus({preventScroll:true}); }
+  };
+  tick();
+}
+
 function poster(s, small){
   const h = hash(s.t) % 360;
   const l = 34 - s.d * 4; // darker shows get darker posters
@@ -433,19 +565,19 @@ function tile(s){
   const h = hash(s.t) % 360, l = 34 - s.d * 4;
   const dots = s.v.map(k=>`<i style="--c:${SVC[k].c}" title="${esc(SVC[k].name)}"></i>`).join('');
   const bars = [1,2,3,4,5].map(n=>`<i class="${n<=s.d?'on':''}"></i>`).join('');
-  return `<button class="tile" data-id="${s.id}" aria-label="${esc(s.t)}">
-    ${ART[s.t] ? `<img class="th" src="${ART[s.t]}" alt="" loading="lazy">` : `<span class="sw" style="--h:${h};--l:${l}%" aria-hidden="true">${esc(s.key.charAt(0).toUpperCase())}</span>`}
+  return `<button class="tile${seen(s)?' seen':''}" data-id="${s.id}" aria-label="${esc(s.t)}${seen(s)?' (watched)':''}">
+    <span class="thw">${ART[s.t] ? `<img class="th" src="${ART[s.t]}" alt="" loading="lazy">` : `<span class="sw" style="--h:${h};--l:${l}%" aria-hidden="true">${esc(s.key.charAt(0).toUpperCase())}</span>`}${seen(s)?'<i class="ck" aria-hidden="true">✓</i>':''}</span>
     <span class="meta"><strong>${esc(s.t)}</strong><span>${esc(s.y)} · ${esc(s.g.join(' · '))}</span></span>
-    <span class="right"><span class="dots">${dots}</span><span class="mini" title="Messed Up-O-Meter ${s.d}/5">${bars}</span></span></button>`;
+    <span class="right">${freshTag(s)}<span class="dots">${dots}</span><span class="mini" title="Messed Up-O-Meter ${s.d}/5">${bars}</span></span></button>`;
 }
 const grid = list => `<div class="grid">${list.map(tile).join('')}</div>`;
 const empty = (msg) => `<div class="empty"><strong>Nothing. Nada.</strong>${msg}</div>`;
 
 /* ---------- state ---------- */
-let state = { view:'service', svc:'all', genre:'all', len:'any', q:'' };
-try { const saved = JSON.parse(localStorage.getItem('sdts')||'{}'); if (saved.view) state.view = saved.view; if (saved.svc) state.svc = saved.svc; if (saved.genre && GENRES.includes(saved.genre)) state.genre = saved.genre; } catch(e){}
+let state = { view:'service', svc:'all', genre:'all', len:'any', q:'', fresh:false, hidew:false };
+try { const saved = JSON.parse(localStorage.getItem('sdts')||'{}'); if (saved.view) state.view = saved.view; if (saved.svc) state.svc = saved.svc; if (saved.genre && GENRES.includes(saved.genre)) state.genre = saved.genre; if (saved.hidew) state.hidew = true; } catch(e){}
 const hv = location.hash.replace('#',''); if (['service','az','genre','actor'].includes(hv)) state.view = hv;
-const save = () => { try { localStorage.setItem('sdts', JSON.stringify({view:state.view, svc:state.svc, genre:state.genre})); } catch(e){} };
+const save = () => { try { localStorage.setItem('sdts', JSON.stringify({view:state.view, svc:state.svc, genre:state.genre, hidew:state.hidew})); } catch(e){} };
 
 /* Connor's start-here list, in his order */
 const PICKS = ["Game of Thrones","The Wire","The Last of Us","Altered Carbon","Ted Lasso","Homeland","Special Ops: Lioness","The Shield","The Old Man","The Rings of Power"];
@@ -456,7 +588,9 @@ const LENS = [
   {k:'long', label:'Life commitment',sub:'40h+',     test:h=>h>=40}];
 function textFiltered(){
   const q = norm(state.q.trim());
-  return q ? SHOWS.filter(s => q.split(/\s+/).every(w => s.hay.includes(w))) : SHOWS;
+  let list = q ? SHOWS.filter(s => q.split(/\s+/).every(w => s.hay.includes(w))) : SHOWS;
+  if (state.view !== 'actor'){ if (state.fresh) list = list.filter(s=>fresh(s)); if (state.hidew) list = list.filter(s=>!seen(s)); }
+  return list;
 }
 function filtered(){
   const list = textFiltered(), L = LENS.find(l=>l.k===state.len);
@@ -466,10 +600,15 @@ function renderPre(){
   const el = $('#pre');
   if (state.view === 'actor') { el.innerHTML = ''; return; }
   const base = textFiltered();
+  const nSeen = SHOWS.filter(seen).length, pct = Math.round(nSeen / SHOWS.length * 100);
+  const nFresh = SHOWS.filter(s=>fresh(s)).length;
+  const tools = `<div><div class="tools"><button class="dice" data-pickme><span aria-hidden="true">🎲</span>Pick for me</button>
+    <div class="prog" title="Saved on this device"><b>You've seen <em>${nSeen}</em> of ${SHOWS.length}</b><span class="bar"><i style="width:${pct}%"></i></span></div></div>
+    <div class="toggles">${nFresh?`<button class="tog" data-fresh aria-pressed="${state.fresh}">🆕 New seasons<b>${nFresh}</b></button>`:''}${nSeen?`<button class="tog" data-hidew aria-pressed="${state.hidew}">Hide watched<b>${nSeen}</b></button>`:''}</div></div>`;
   const lens = `<div><div class="lens-label">Time to watch</div><div class="lens" role="group" aria-label="Filter by watch time">${
     LENS.map(l=>{ const n = l.test ? base.filter(s=>l.test(s.h||0)).length : base.length;
       return `<button class="len" data-len="${l.k}" aria-pressed="${state.len===l.k}"${l.sub?` title="${l.sub}"`:''}>${esc(l.label)}${l.sub?` <span style="opacity:.7;font-weight:500">· ${l.sub}</span>`:''}<b>${n}</b></button>`; }).join('')}</div></div>`;
-  const showPicks = !state.q.trim() && state.len==='any' && (state.view==='az' || (state.view==='service'&&state.svc==='all') || (state.view==='genre'&&state.genre==='all'));
+  const showPicks = !state.q.trim() && state.len==='any' && !state.fresh && !state.hidew && (state.view==='az' || (state.view==='service'&&state.svc==='all') || (state.view==='genre'&&state.genre==='all'));
   let picks = '';
   if (showPicks){
     const list = PICKS.map(t=>SHOWS.find(s=>s.t===t)).filter(Boolean);
@@ -478,7 +617,7 @@ function renderPre(){
         const art = ART[s.t] ? `<img src="${ART[s.t]}" alt="" loading="lazy">` : `<span class="sw" style="--h:${h};--l:${l}%">${esc(s.key.charAt(0).toUpperCase())}</span>`;
         return `<button class="pick" data-id="${s.id}" aria-label="Number ${i+1}: ${esc(s.t)}"><span class="pframe">${art}<span class="rk" aria-hidden="true">${i+1}</span></span><span class="pt">${esc(s.t)}</span></button>`; }).join('')}</div><div class="dots" aria-hidden="true"></div></section>`;
   }
-  el.innerHTML = lens + picks;
+  el.innerHTML = tools + lens + picks;
   if (picks) wirePicks(el);
 }
 function wirePicks(el){
@@ -587,6 +726,7 @@ function openCard(id){
   const watch = s.v.map(k=>`<a class="wbtn" style="--c:${SVC[k].c}" href="${(s.w&&s.w[k])||SVC[k].url(T)}" target="_blank" rel="noopener">${k==='rent'?'Rent or buy on Prime Video':'Watch on '+esc(SVC[k].name)}<span aria-hidden="true">↗</span></a>`).join('');
   const trailer = s.yt ? `https://youtu.be/${s.yt}` : `https://www.youtube.com/results?search_query=${T}+official+trailer`;
   const bars = [1,2,3,4,5].map(n=>`<i class="${n<=s.d?'on':''}"></i>`).join('');
+  const f = fresh(s), liked = LIKED.has(s.slug);
   const sheet = $('#sheet');
   sheet.innerHTML = `
     <div class="grab"><i></i><button class="close" id="close" data-close><span aria-hidden="true">←</span>Back to list</button></div>
@@ -600,6 +740,12 @@ function openCard(id){
       <div class="meter-q">How messed up is this show?</div>
       <div class="meter-bar">${bars}</div>
       <div class="meter-ends"><span>Ted Lasso</span><span>True Detective</span></div></div>
+    <div class="acts">
+      <button class="act" data-watch="${s.id}" aria-pressed="${seen(s)}"><span class="ic" aria-hidden="true">${seen(s)?'✓':'○'}</span>${seen(s)?'Watched':'Watched it?'}</button>
+      <button class="act${liked?' liked':''}" data-like="${s.id}" aria-label="Thumbs up"><span class="ic" aria-hidden="true">👍</span><span class="n" id="likes">…</span></button>
+      <button class="act" data-share="${s.id}"><span class="ic" aria-hidden="true">↗</span>Share</button>
+    </div>
+    ${f ? `<div class="fresh"><span aria-hidden="true">${f.kind==='new'?'🆕':'📅'}</span>${f.kind==='new' ? `Season ${f.n} is out now (premiered ${fmtDay(f.d)})` : `Season ${f.n} drops ${fmtDay(f.d)}`}</div>` : ''}
     <div class="take"><h3>The take</h3><p>${esc(s.n)}</p></div>
     <div class="block"><h3>Where to watch</h3><div class="watch">${watch}</div>
       <div class="row2">
@@ -613,8 +759,15 @@ function openCard(id){
   $('#scrim').hidden = false; sheet.hidden = false; sheet.scrollTop = 0;
   document.body.style.overflow = 'hidden';
   $('#close').focus();
+  try { history.replaceState(null, '', '#' + s.slug); } catch(e){}
+  const shown = s.id;
+  likeCount(s).then(n => { const el = $('#likes'); if (!el || $('#sheet').hidden || openId !== shown) return; el.textContent = n == null ? (LIKED.has(s.slug)?'Liked':'Like') : n.toLocaleString('en-US'); });
+  openId = s.id;
 }
+let openId = -1;
 function closeCard(){
+  openId = -1;
+  try { if (/^#[a-z0-9-]+$/.test(location.hash) && BYSLUG[location.hash.slice(1)]) history.replaceState(null, '', location.pathname + location.search); } catch(e){}
   $('#scrim').hidden = true; $('#sheet').hidden = true; document.body.style.overflow = '';
   if (lastFocus && lastFocus.focus) lastFocus.focus();
 }
@@ -638,11 +791,35 @@ document.addEventListener('click', e => {
   const a = e.target.closest('[data-actor]'); if (a) { goActor(a.dataset.actor); return; }
   const ln = e.target.closest('[data-len]'); if (ln) { state.len = ln.dataset.len; render(); return; }
   const t = e.target.closest('.tile, .pick'); if (t) { openCard(+t.dataset.id); return; }
+  if (e.target.closest('[data-pickme]')) { openPicker(); return; }
+  const md = e.target.closest('[data-mood]'); if (md) { mood = md.dataset.mood; document.querySelectorAll('.mood').forEach(b=>b.setAttribute('aria-pressed', b===md)); spin(); return; }
+  if (e.target.closest('[data-spin]')) { spin(); return; }
+  const op = e.target.closest('[data-open]'); if (op) { openCard(+op.dataset.open); return; }
+  if (e.target.closest('[data-fresh]')) { state.fresh = !state.fresh; render(); return; }
+  if (e.target.closest('[data-hidew]')) { state.hidew = !state.hidew; save(); render(); return; }
+  const wa = e.target.closest('[data-watch]'); if (wa) { const s = SHOWS[+wa.dataset.watch];
+    if (WATCHED.has(s.slug)) WATCHED.delete(s.slug); else WATCHED.add(s.slug);
+    store.put('hbo-watched', WATCHED); const on = seen(s);
+    wa.setAttribute('aria-pressed', on); wa.innerHTML = `<span class="ic" aria-hidden="true">${on?'✓':'○'}</span>${on?'Watched':'Watched it?'}`;
+    if (on) toast(`${SHOWS.filter(seen).length} down, ${SHOWS.length - SHOWS.filter(seen).length} to go`);
+    render(); return; }
+  const lk = e.target.closest('[data-like]'); if (lk) { const s = SHOWS[+lk.dataset.like];
+    if (LIKED.has(s.slug)) { toast('You already gave this one a thumbs up 👍'); return; }
+    LIKED.add(s.slug); store.put('hbo-liked', LIKED); lk.classList.add('liked');
+    const el = $('#likes'); const cur = parseInt((el && el.textContent || '').replace(/,/g,''), 10);
+    if (el && !isNaN(cur)) el.textContent = (cur + 1).toLocaleString('en-US');
+    likeHit(s).then(n => { const el = $('#likes'); if (el && n != null && openId === s.id) el.textContent = n.toLocaleString('en-US'); });
+    toast('Thumbs up counted 👍'); return; }
+  const sh = e.target.closest('[data-share]'); if (sh) { share(SHOWS[+sh.dataset.share]); return; }
   if (e.target.closest('[data-close]') || e.target.id === 'scrim') closeCard();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#sheet').hidden) closeCard(); });
 
+document.addEventListener('change', e => { if (e.target.id === 'skipw') { skipSeen = e.target.checked; spin(); } });
 render();
+function openFromHash(){ const k = decodeURIComponent(location.hash.slice(1)); const s = BYSLUG[k]; if (s && openId !== s.id) openCard(s.id); }
+openFromHash();
+window.addEventListener('hashchange', openFromHash);
 
 /* tagline fills the header width (up to 460px); title is sized to exactly match it */
 function fitTitle(){
