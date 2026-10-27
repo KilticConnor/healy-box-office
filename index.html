@@ -259,6 +259,13 @@ footer p{margin:0;max-width:70ch}
 .pcard p{margin:6px 0 0;font-size:13.5px;color:var(--muted);line-height:1.45}
 .pcard .go{margin-top:10px;display:inline-flex;background:var(--accent);color:var(--accent-ink);border:0;border-radius:9px;padding:9px 14px;font-weight:800;font-size:14px;cursor:pointer}
 .pcard.rolling{opacity:.7}
+.trow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-inline:-2px;padding:2px}
+.trow::-webkit-scrollbar{display:none}
+.tchip{flex:1 0 auto;display:flex;align-items:center;justify-content:center;gap:5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 8px;font-weight:600;font-size:12.5px;cursor:pointer;white-space:nowrap;line-height:1.2}
+.tchip span{font-size:13px;line-height:1}
+.tchip b{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:-.02em;color:var(--muted)}
+.tchip.pickc{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:800}
+.tchip[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface))}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--fg);color:var(--bg);border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;box-shadow:0 10px 30px -8px rgba(0,0,0,.7);max-width:calc(100vw - 32px);text-align:center}
 </style>
 
@@ -602,9 +609,10 @@ function renderPre(){
   const base = textFiltered();
   const nSeen = SHOWS.filter(seen).length, pct = Math.round(nSeen / SHOWS.length * 100);
   const nFresh = SHOWS.filter(s=>fresh(s)).length;
-  const tools = `<div><div class="tools"><button class="dice" data-pickme><span aria-hidden="true">🎲</span>Pick for me</button>
-    <div class="prog" title="Saved on this device"><b>You've seen <em>${nSeen}</em> of ${SHOWS.length}</b><span class="bar"><i style="width:${pct}%"></i></span></div></div>
-    <div class="toggles">${nFresh?`<button class="tog" data-fresh aria-pressed="${state.fresh}">🆕 New seasons<b>${nFresh}</b></button>`:''}${nSeen?`<button class="tog" data-hidew aria-pressed="${state.hidew}">Hide watched<b>${nSeen}</b></button>`:''}</div></div>`;
+  const tools = `<div class="trow" role="group" aria-label="Quick tools">
+    <button class="tchip pickc" data-pickme><span aria-hidden="true">🎲</span>Pick for me</button>
+    <button class="tchip" data-hidew aria-pressed="${state.hidew}" title="${state.hidew?'Showing only shows you haven\'t seen. Tap to show all.':'Tap to hide the shows you\'ve seen (saved on this device)'}"><span aria-hidden="true">✓</span>Seen<b>${nSeen}/${SHOWS.length}</b></button>
+    ${nFresh?`<button class="tchip" data-fresh aria-pressed="${state.fresh}"><span aria-hidden="true">🆕</span>New seasons<b>${nFresh}</b></button>`:''}</div>`;
   const lens = `<div><div class="lens-label">Time to watch</div><div class="lens" role="group" aria-label="Filter by watch time">${
     LENS.map(l=>{ const n = l.test ? base.filter(s=>l.test(s.h||0)).length : base.length;
       return `<button class="len" data-len="${l.k}" aria-pressed="${state.len===l.k}"${l.sub?` title="${l.sub}"`:''}>${esc(l.label)}${l.sub?` <span style="opacity:.7;font-weight:500">· ${l.sub}</span>`:''}<b>${n}</b></button>`; }).join('')}</div></div>`;
@@ -796,7 +804,7 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-spin]')) { spin(); return; }
   const op = e.target.closest('[data-open]'); if (op) { openCard(+op.dataset.open); return; }
   if (e.target.closest('[data-fresh]')) { state.fresh = !state.fresh; render(); return; }
-  if (e.target.closest('[data-hidew]')) { state.hidew = !state.hidew; save(); render(); return; }
+  if (e.target.closest('[data-hidew]')) { if (!SHOWS.some(seen)) { toast('Open a show and tap “Watched it?” to start your tally'); return; } state.hidew = !state.hidew; save(); render(); toast(state.hidew ? 'Hiding shows you’ve seen' : 'Showing everything'); return; }
   const wa = e.target.closest('[data-watch]'); if (wa) { const s = SHOWS[+wa.dataset.watch];
     if (WATCHED.has(s.slug)) WATCHED.delete(s.slug); else WATCHED.add(s.slug);
     store.put('hbo-watched', WATCHED); const on = seen(s);
