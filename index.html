@@ -266,6 +266,17 @@ footer p{margin:0;max-width:70ch}
 .tchip b{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:-.02em;color:var(--muted)}
 .tchip.pickc{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:800}
 .tchip[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface))}
+
+/* add-to-home-screen helper */
+.a2hs{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:45;max-width:520px;margin:0 auto;display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--surface);border:1.5px solid var(--accent);border-radius:16px;padding:12px 10px 12px 12px;box-shadow:0 18px 40px -12px rgba(0,0,0,.85);animation:up .35s cubic-bezier(.2,.8,.2,1)}
+.a2hs img{width:52px;height:52px;border-radius:12px;display:block}
+.a2hs strong{display:block;font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:20px;line-height:1;letter-spacing:.02em;color:var(--accent);margin-bottom:4px}
+.a2hs p{margin:0;font-size:13.5px;line-height:1.4;color:var(--fg)}
+.a2hs p b{white-space:nowrap}
+.a2hs .shr{display:inline-block;width:15px;height:17px;vertical-align:-3px;margin:0 1px;stroke:var(--accent)}
+.a2hs .x{align-self:start;background:none;border:0;color:var(--muted);font-size:22px;line-height:1;width:32px;height:32px;border-radius:8px;cursor:pointer}
+.a2hs .inst{margin-top:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:9px;padding:8px 14px;font-weight:800;font-size:14px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.a2hs{animation:none}}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--accent);color:#000;border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;box-shadow:0 10px 30px -8px rgba(0,0,0,.7);max-width:calc(100vw - 32px);text-align:center}
 </style>
 
@@ -829,6 +840,41 @@ render();
 function openFromHash(){ const k = decodeURIComponent(location.hash.slice(1)); const s = BYSLUG[k]; if (s && openId !== s.id) openCard(s.id); }
 openFromHash();
 window.addEventListener('hashchange', openFromHash);
+
+/* ---------- one-time "add to Home Screen" helper ---------- */
+(function(){
+  const KEY = 'hbo-a2hs-done';
+  const force = /[?&]a2hs=1/.test(location.search);
+  const onSite = /(^|\.)healyboxoffice\.tv$/.test(location.hostname);
+  const standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  let done = false; try { done = localStorage.getItem(KEY) === '1'; } catch(e){}
+  if (!force && (!onSite || standalone || done)) return;
+  const ua = navigator.userAgent || '';
+  const ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const android = /Android/.test(ua);
+  if (!force && !ios && !android) return;
+  const inApp = /FBAN|FBAV|Instagram|Line\/|Snapchat|Twitter|LinkedInApp|GSA\//.test(ua);
+  const SHARE = '<svg class="shr" viewBox="0 0 16 18" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 11V1.5M4.8 4.5 8 1.3l3.2 3.2"/><path d="M5 7H2.5v9.5h11V7H11"/></svg>';
+  let deferred = null, shown = false;
+  const close = () => { try { localStorage.setItem(KEY,'1'); } catch(e){} const b = document.querySelector('.a2hs'); if (b) b.remove(); };
+  function show(kind){
+    if (shown) return; shown = true;
+    const msg = kind === 'inapp' ? `Open this page in <b>Safari</b> (or Chrome), then add it to your Home Screen. It works just like an app.`
+      : kind === 'ios' ? `Tap ${SHARE}<b>Share</b> (or <b>⋯</b> then Share), then <b>“Add to Home Screen”</b>. It opens just like an app.`
+      : kind === 'prompt' ? `Put Healy Box Office on your home screen. It opens just like an app.`
+      : `Tap your browser's <b>⋮ menu</b>, then <b>“Add to Home screen”</b>. It opens just like an app.`;
+    const el = document.createElement('div');
+    el.className = 'a2hs'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','Add to Home Screen');
+    el.innerHTML = `<img src="apple-touch-icon.png" alt=""><div><strong>Make it an app</strong><p>${msg}</p>${kind==='prompt'?'<button class="inst">Install</button>':''}</div><button class="x" aria-label="No thanks">×</button>`;
+    document.body.appendChild(el);
+    el.querySelector('.x').addEventListener('click', close);
+    const ib = el.querySelector('.inst');
+    if (ib) ib.addEventListener('click', async () => { if (!deferred) return; deferred.prompt(); try { await deferred.userChoice; } catch(e){} deferred = null; close(); });
+  }
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; setTimeout(()=>show('prompt'), 1500); });
+  window.addEventListener('appinstalled', close);
+  setTimeout(() => { if (shown) return; show(inApp ? 'inapp' : ios ? 'ios' : (deferred ? 'prompt' : 'android')); }, ios || inApp ? 2500 : 5000);
+})();
 
 /* tagline fills the header width (up to 460px); title is sized to exactly match it */
 function fitTitle(){
