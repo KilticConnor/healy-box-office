@@ -513,7 +513,17 @@ function toast(msg){
   let t = document.querySelector('.toast'); if (!t){ t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
   t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(()=>{ t.hidden = true; }, 2400);
 }
+/* ---------- GoatCounter (privacy-friendly visit counts; only on healyboxoffice.tv) ---------- */
+function gc(path, title, event, tries){
+  try {
+    const g = window.goatcounter;
+    if (g && g.count) { g.count({path, title: title || path, event: !!event}); return; }
+    if ((tries||0) < 5 && document.querySelector('script[data-goatcounter]')) setTimeout(()=>gc(path, title, event, (tries||0)+1), 1500);
+  } catch(e){}
+}
+
 async function share(s){
+  gc('share/' + s.slug, 'Shared: ' + s.t, true);
   const url = SITE + '#' + s.slug, text = `${s.t} — Connor says watch it.`;
   if (navigator.share) { try { await navigator.share({title:s.t, text, url}); return; } catch(e){ if (e && e.name === 'AbortError') return; } }
   try { await navigator.clipboard.writeText(url); toast('Link copied — go send it'); } catch(e){ toast(url); }
@@ -559,7 +569,7 @@ function spin(){
   const tick = () => {
     if (run !== rolling || !$('#pres')) return;
     if (i++ < steps){ $('#pres').innerHTML = pcard(pool[Math.floor(Math.random()*pool.length)], false); setTimeout(tick, 60 + i*12); }
-    else { $('#pres').innerHTML = pcard(pick, true); const b = $('#pres .go'); if (b) b.focus({preventScroll:true}); }
+    else { gc('pick-for-me/' + pick.slug, 'Pick for me → ' + pick.t + ' (' + mood + ')', true); $('#pres').innerHTML = pcard(pick, true); const b = $('#pres .go'); if (b) b.focus({preventScroll:true}); }
   };
   tick();
 }
@@ -743,7 +753,7 @@ let lastFocus = null;
 function openCard(id){
   const s = SHOWS[id]; lastFocus = document.activeElement;
   const T = encodeURIComponent(s.t);
-  const watch = s.v.map(k=>`<a class="wbtn" style="--c:${SVC[k].c}" href="${(s.w&&s.w[k])||SVC[k].url(T)}" target="_blank" rel="noopener">${k==='rent'?'Rent or buy on Prime Video':'Watch on '+esc(SVC[k].name)}<span aria-hidden="true">↗</span></a>`).join('');
+  const watch = s.v.map(k=>`<a class="wbtn" data-gc="watch-${k}" style="--c:${SVC[k].c}" href="${(s.w&&s.w[k])||SVC[k].url(T)}" target="_blank" rel="noopener">${k==='rent'?'Rent or buy on Prime Video':'Watch on '+esc(SVC[k].name)}<span aria-hidden="true">↗</span></a>`).join('');
   const trailer = s.yt ? `https://youtu.be/${s.yt}` : `https://www.youtube.com/results?search_query=${T}+official+trailer`;
   const bars = [1,2,3,4,5].map(n=>`<i class="${n<=s.d?'on':''}"></i>`).join('');
   const f = fresh(s), liked = LIKED.has(s.slug);
@@ -769,8 +779,8 @@ function openCard(id){
     <div class="take"><h3>The take</h3><p>${esc(s.n)}</p></div>
     <div class="block"><h3>Where to watch</h3><div class="watch">${watch}</div>
       <div class="row2">
-        <a class="ghost primary" href="${trailer}" target="_blank" rel="noopener">▶ ${esc(s.yl||'Trailer')}</a>
-        <a class="ghost" href="https://www.justwatch.com/us/search?q=${T}" target="_blank" rel="noopener">All options ↗</a>
+        <a class="ghost primary" data-gc="trailer" href="${trailer}" target="_blank" rel="noopener">▶ ${esc(s.yl||'Trailer')}</a>
+        <a class="ghost" data-gc="all-options" href="https://www.justwatch.com/us/search?q=${T}" target="_blank" rel="noopener">All options ↗</a>
       </div>
     </div>
     <div class="block"><h3>Starring</h3><div class="cloud">${s.c.map(a=>`<button class="cast" data-actor="${esc(a)}">${esc(a)}</button>`).join('')}</div>
@@ -780,6 +790,7 @@ function openCard(id){
   document.body.style.overflow = 'hidden';
   $('#close').focus();
   try { history.replaceState(null, '', '#' + s.slug); } catch(e){}
+  gc('/show/' + s.slug, s.t);
   const shown = s.id;
   likeCount(s).then(n => { const el = $('#likes'); if (!el || $('#sheet').hidden || openId !== shown) return; el.textContent = n == null ? (LIKED.has(s.slug)?'Liked':'Like') : n.toLocaleString('en-US'); });
   openId = s.id;
@@ -808,6 +819,7 @@ $('#q').addEventListener('input', e => { state.q = e.target.value; render(); });
 $('#clear').addEventListener('click', () => { state.q=''; $('#q').value=''; render(); $('#q').focus(); });
 function goActor(name){ closeCard(); state.view='actor'; state.q=name; $('#q').value=name; save(); render(); window.scrollTo({top:0}); }
 document.addEventListener('click', e => {
+  const gl = e.target.closest('[data-gc]'); if (gl && openId >= 0) { const s = SHOWS[openId]; gc(gl.dataset.gc + '/' + s.slug, gl.textContent.replace(/[↗▶]/g,'').trim() + ' — ' + s.t, true); }
   const a = e.target.closest('[data-actor]'); if (a) { goActor(a.dataset.actor); return; }
   const ln = e.target.closest('[data-len]'); if (ln) { state.len = ln.dataset.len; render(); return; }
   const t = e.target.closest('.tile, .pick'); if (t) { openCard(+t.dataset.id); return; }
@@ -821,6 +833,7 @@ document.addEventListener('click', e => {
     if (WATCHED.has(s.slug)) WATCHED.delete(s.slug); else WATCHED.add(s.slug);
     store.put('hbo-watched', WATCHED); const on = seen(s);
     wa.setAttribute('aria-pressed', on); wa.innerHTML = `<span class="ic" aria-hidden="true">${on?'✓':'○'}</span>${on?'Watched':'Watched it?'}`;
+    if (on) gc('watched/' + s.slug, 'Watched: ' + s.t, true);
     if (on) toast(`${SHOWS.filter(seen).length} down, ${SHOWS.length - SHOWS.filter(seen).length} to go`);
     render(); return; }
   const lk = e.target.closest('[data-like]'); if (lk) { const s = SHOWS[+lk.dataset.like];
@@ -829,6 +842,7 @@ document.addEventListener('click', e => {
     const el = $('#likes'); const cur = parseInt((el && el.textContent || '').replace(/,/g,''), 10);
     if (el && !isNaN(cur)) el.textContent = (cur + 1).toLocaleString('en-US');
     likeHit(s).then(n => { const el = $('#likes'); if (el && n != null && openId === s.id) el.textContent = n.toLocaleString('en-US'); });
+    gc('thumbs-up/' + s.slug, 'Thumbs up: ' + s.t, true);
     toast('Thumbs up counted 👍'); return; }
   const sh = e.target.closest('[data-share]'); if (sh) { share(SHOWS[+sh.dataset.share]); return; }
   if (e.target.closest('[data-close]') || e.target.id === 'scrim') closeCard();
@@ -872,7 +886,7 @@ window.addEventListener('hashchange', openFromHash);
     if (ib) ib.addEventListener('click', async () => { if (!deferred) return; deferred.prompt(); try { await deferred.userChoice; } catch(e){} deferred = null; close(); });
   }
   window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; setTimeout(()=>show('prompt'), 1500); });
-  window.addEventListener('appinstalled', close);
+  window.addEventListener('appinstalled', () => { gc('installed', 'Added to home screen', true); close(); });
   setTimeout(() => { if (shown) return; show(inApp ? 'inapp' : ios ? 'ios' : (deferred ? 'prompt' : 'android')); }, ios || inApp ? 2500 : 5000);
 })();
 
@@ -895,5 +909,6 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitle);
 window.addEventListener('resize', fitTitle);
 </script>
 
+<script data-goatcounter="https://healyboxoffice.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
