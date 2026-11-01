@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://healyboxoffice.tv/sitemap.xml
