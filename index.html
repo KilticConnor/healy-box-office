@@ -643,7 +643,7 @@ const hv = location.hash.replace('#',''); if (['service','az','genre','actor','n
 const save = () => { try { localStorage.setItem('sdts', JSON.stringify({view:state.view, svc:state.svc, genre:state.genre, hidew:state.hidew})); } catch(e){} };
 
 /* Connor's start-here list, in his order */
-const PICKS = ["Game of Thrones","The Wire","The Last of Us","Altered Carbon","The Rings of Power","Ted Lasso","Homeland","Special Ops: Lioness","The Shield","The Old Man"];
+const PICKS = ["Game of Thrones","The Wire","The Last of Us","Altered Carbon","The Rings of Power","Special Ops: Lioness","Homeland","Ted Lasso","The Shield","The Old Man"];
 const LENS = [
   {k:'any',  label:'Any length'},
   {k:'short',label:'Weekend binge', sub:'under 10h', test:h=>h<=10},
